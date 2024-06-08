@@ -106,3 +106,13 @@ select student.name,student.address,laptops.lmodel from student ,laptops where s
 
 select student.name,student.address,laptops.lmodel from student outer join laptops ;
 
+#using the group by function
+# for groupby the columns in the select should be added in the group by except the aggregate
+select customer_id, staff_id,rental_id,count(amount) from payment group by customer_id,staff_id,rental_id order by customer_id;
+
+select Date(payment_date),sum(amount) from payment group by date(payment_date) order by sum(amount) desc;
+
+select staff_id,count(amount) from payment group by staff_id;
+
+select rating,avg(replacement_cost) from film group by rating;
+
