@@ -1,0 +1,108 @@
+# to show all the databases
+show databases;
+
+# to create an database
+create database abhi;
+
+# to use a database
+use abhi;
+
+# to drop or delete a database
+drop database abhi;
+
+# create tables inside the database
+create table my_table (Id int(11) primary key, name varchar(20) not null,address varchar(50));
+
+# to show tables in the database
+show tables
+
+#describe the table or get columns of the tablt
+desc my_table;
+
+# to drop the table 
+drop table my_table;
+
+# to rename the table to new name;
+alter table my_table rename to student;
+
+# to delete the data from table
+truncate table student;
+desc student
+
+# to inser the data in the table
+# here we can even change the order of the column by specifying the column
+insert into student(id,name,address) values(12,'Abhishek','Metagalli');
+# here directly we willl add values so we cannot modify the column
+insert into student values(16,'Tripathi','california','USA');
+
+# to get the complete data from the table
+select * from student;
+
+# to add one more column using alter
+alter table student add country varchar(50);
+
+
+select * from student;
+
+# to update the value of a row
+update student set country='India',address='Mysore' where id=12;
+
+# to delete a row from the table
+delete from student where id=13;
+
+#Clauses
+#where clause
+select * from student where country="India";
+
+#displaying the column name as different
+select  name as "USERNAME" from student;
+
+#displaying distinct rows
+select distinct(country) from student;
+
+#multiple conditions using and/or
+select * from student where country="India" and address="Mysore";
+
+# selecting data between in range
+select * from student where id between 14 and 16;
+# if we dont want to include range
+select * from student where id>14 and id<17;
+# selecting using in 
+select * from student where id in (12,14,16);
+# limiting the student list thats displayed, limit crops from 2
+select * from student limit 2;
+# skipping rows and then selecting rows after that, offset is used to leave from top
+select * from student limit 2 offset 2;
+# ordering the list that is displayed, by default order by uses ascending
+select * from student order by id;
+#to use desccending
+select * from student order by name desc;
+# combining limit, orderby finding the 2 from below
+select * from student order by name desc limit 2;
+#like operator
+# wild card operators in like operator are 
+# % means zero or multiple characters
+# _ means single character
+select * from student where address like '_y%';
+
+#using sum,max,min,avg,count
+select max(id) as Salary from student;
+
+#Nested query
+select name from student where id=(select max(id) as Salary from student);
+
+### foreign key
+create table laptops(lid int primary key, lmodel varchar(200), studentId int,foreign key (studentId) references student(id));
+desc laptops;
+
+insert into laptops values(10,'HP',12);
+insert into laptops values(11,'DELL',13);
+insert into laptops values(12,'DELL',14);
+insert into laptops values(13,'DELL',14);
+insert into laptops values(14,'DELL',15);
+
+#using joins
+select student.name,student.address,laptops.lmodel from student ,laptops where student.id= laptops.studentId;
+
+select student.name,student.address,laptops.lmodel from student outer join laptops ;
+
