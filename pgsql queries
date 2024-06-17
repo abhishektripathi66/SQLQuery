@@ -1,0 +1,110 @@
+select customer_id,sum(amount) from payment where staff_id=2 group by customer_id having sum(amount)>110
+
+select count(*) from film where title like 'J%'
+
+select max(customer_id) from customer
+
+
+select first_name,last_name from customer where first_name like 'E%' and address_id < 500 order by customer_id desc limit 1
+
+/* joins */
+/* inner join gets the commons between the two table and */
+select distinct(email)
+from payment inner join customer on payment.customer_id=customer.customer_id where amount>10;
+
+/* Outer join
+there are full outer join, its easiest join
+left and right outer join */
+	/* full outer join gives all the common and non common rows from both the table, if there are not comon rows in the corresponding table then their values will be marked as null*/
+select * from registration full outer join logins on registration.name = logins.name;
+
+/* if we want to remove the common values from the full outer join then we can start with this approach*/
+select * from registration full outer join logins on registration.name = logins.name where registration.id=null or logins.id=null;
+
+select payment_id,customer.customer_id, first_name, last_name from payment full outer join customer on payment.customer_id = customer.customer_id where customer.customer_id is null or payment.payment_id is null
+
+/* left outer join, selects all of left table and inner join of right table */
+select * from registration left outer join logins on registration.name = logins.name
+
+/* if we dont want the common stuffs then we can try this */
+select * from registration left outer join logins on registration.name =logins.name where login.id is null or registration.id is null;
+
+select payment_id, customer.customer_id, first_name, last_name from payment left outer join customer on payment.customer_id=customer.customer_id where first_name is null
+
+/* Right joins is similr to left outer join its just the tables are switch, now the right table complete data is taken and along with that the left tables inner join */
+
+/* union is used to combine two tables , it is used to combine result of two select statments*/
+select * from table A union select * from table b;
+select distinct(address) from address order by address;
+select district,email from customer join address on address.address_id=customer_id where district ilike 'california';
+select title from film join film_actor on film.film_id=film_actor.film_id where actor_id in (select actor_id from actor where first_name like 'Nick' and last_name like 'Wahlberg');
+-- joining 3 tables
+select title from film join film_actor on film.film_id=film_actor.film_id join actor on actor.actor_id=film_actor.actor_id where first_name like 'Nick' and last_name like 'Wahlberg';
+-- get current time
+select now() 
+-- get all details about the connection
+show all
+-- get only timezone
+show timezone
+-- better readability and storability
+select timeofday()
+-- only time
+select current_time
+select current_date
+-- to exract year from the time column or even current time
+select extract(year from now())
+-- just like year we can even extract month, day, week, quarter
+-- getting age of the day
+select age(now())
+--- formatiing a data type to required text
+	--- to char formatting link https://www.postgresql.org/docs/12/functions-formatting.html
+select to_char(now(),'day month-dd-yyyy');
+
+select DISTINCT(to_char(payment_date,'MONTH')) from payment 
+
+	-- selecting rows with with day as monday
+select count(*) from payment where extract(dow from payment_date) = 1;
+--mathematical operations and functions
+select ROUND(rental_rate/replacement_cost,2)*100 from film
+-- string functions and operations to edit combine or alter data of columns
+
+select upper(first_name||' '||last_name) as name from customer
+
+--sub query is using 2 select queries
+select title from film join film_actor on film.film_id=film_actor.film_id where actor_id in (select actor_id from actor where first_name like 'Nick' and last_name like 'Wahlberg');
+
+-- self join
+select f1.title, f2.title, f1.length from film as f1 inner join film as f2 on f1.film_id != f2.film_id and f1.length = f2.length
+
+select * from cd.facilities;
+
+select name,membercost from cd.facilities;
+
+
+select * from cd.facilities where membercost>0 limit 5;
+
+select facid, name, membercost, monthlymaintenance from cd.facilities where membercost<(monthlymaintenance/50) and membercost>0;
+
+select * from cd.facilities where name ilike '%tennis%';
+
+select * from cd.facilities where facid in (1,5);
+
+select * from cd.members;
+
+select memid,surname,firstname, joindate from cd.members where extract(Month from joindate)>8 and extract(year from joindate)>=2012;
+
+select Distinct(surname) from cd.members order by surname asc limit 10;
+
+select joindate from cd.members order by memid desc limit 1;
+
+select * from cd.bookings;
+
+select count(*) from cd.facilities where guestcost>=10;
+
+select facid,sum(slots) from cd.bookings where extract(Month from starttime)=9 and extract(year from starttime)=2012 group by facid order by sum(slots);
+
+select facid,sum(slots) from cd.bookings group by facid having sum(slots)>1000 order by facid;
+
+select starttime,name from cd.bookings as b inner join cd.facilities as f on f.facid=b.facid where extract(Month from starttime)=9 and extract(year from starttime)=2012 and extract(day from starttime)=21 and name ilike 'Tennis court%';
+
+select starttime,upper(firstname||' '||surname) as name from cd.members as m inner join cd.bookings as b on b.memid=m.memid where firstname ilike 'David' and surname ilike 'Farrell';
